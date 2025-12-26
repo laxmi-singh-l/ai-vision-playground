@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>OpenCV Web Capture</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        video,
+        canvas {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Webcam Capture (Every 5 Seconds)</h2>
+
+    <!-- Live webcam feed -->
+    <video id="video" width="100%" autoplay></video>
+
+    <!-- Hidden canvas (image processing ke liye) -->
+    <canvas id="canvas" width="100%" height="100%" style="display:none;"></canvas>
+
+    <script>
+        // -----------------------------
+        // DOM elements
+        // -----------------------------
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        // -----------------------------
+        // Webcam access
+        // -----------------------------
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Webcam access error:", err);
+            });
+
+        // -----------------------------
+        // Function: capture & send image
+        // -----------------------------
+        function captureAndSend() {
+            // Video frame canvas pe draw
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Canvas → Base64 image
+            const imageData = canvas.toDataURL("image/jpeg");
+
+            // Backend ko send
+            fetch("/upload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ image: imageData })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Saved:", data.file);
+                })
+                .catch(err => {
+                    console.error("Upload error:", err);
+                });
+        }
+
+        // -----------------------------
+        // Every 5 seconds photo capture
+        // -----------------------------
+        setInterval(captureAndSend, 5000);
+    </script>
+
+</body>
+
+</html>
