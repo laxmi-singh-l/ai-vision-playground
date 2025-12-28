@@ -1,6 +1,6 @@
 import cv2
-import numpy as np
 import os
+import numpy as np
 from datetime import datetime
 
 face_cascade = cv2.CascadeClassifier(
@@ -20,8 +20,10 @@ for person in os.listdir("dataset"):
     person_path = os.path.join("dataset", person)
 
     for img in os.listdir(person_path):
-        img_path = os.path.join(person_path, img)
-        image = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+        image = cv2.imread(
+            os.path.join(person_path, img),
+            cv2.IMREAD_GRAYSCALE
+        )
         faces.append(image)
         labels.append(label_id)
 
@@ -38,10 +40,9 @@ while True:
 
     faces_detected = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-    for (x,y,w,h) in faces_detected:
+    for (x, y, w, h) in faces_detected:
         face = gray[y:y+h, x:x+w]
         label, confidence = recognizer.predict(face)
-
         name = label_map[label]
 
         if confidence < 60 and not logged:
@@ -49,9 +50,10 @@ while True:
                 f.write(f"{name} captured at {datetime.now()}\n")
             logged = True
 
-        cv2.putText(frame, name, (x,y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
         cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), 2)
+        cv2.putText(frame, name, (x,y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8,
+                    (0,255,0), 2)
 
     cv2.imshow("Recognition", frame)
 
@@ -60,3 +62,4 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+print("Recognition and logging completed")
