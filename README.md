@@ -167,7 +167,7 @@ A Flask-powered interface for capturing images directly from the browser, saving
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
----
+----
 
 <div align="center">
   <i>Built with ❤️ for the AI Vision Playground</i>
