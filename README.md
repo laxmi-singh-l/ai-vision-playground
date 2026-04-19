@@ -70,7 +70,7 @@ Ensure you have **Python 3.8+** installed. It is highly recommended to use a vir
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/ai-vision-playground.git
+   git clone https://github.com/laxmi-singh-l/ai-vision-playground.git
    cd ai-vision-playground
    ```
 
