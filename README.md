@@ -155,7 +155,6 @@ A Flask-powered interface for capturing images directly from the browser, saving
 </details>
 
 ---
-
 ## 📝 Notes
 
 - **Camera Permissions:** Ensure your terminal or IDE has permission to access the webcam when running the OpenCV scripts.
